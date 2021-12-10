@@ -1,4 +1,6 @@
-import sys, pygame, math
+import sys
+
+import pygame
 
 
 # Starter code for an avoider game. Written by David Johnson for CS 1400 University of Utah.
@@ -26,7 +28,6 @@ def main():
     pygame.mixer.music.load('MainMenuMusic.wav')
     pygame.mixer.music.play(-1)
 
-
     map = pygame.image.load("Maze_level_1.png")
     map = pygame.transform.smoothscale(map, (1000, 700))
     # Store window width and height in different forms for easy access
@@ -40,8 +41,8 @@ def main():
     map_mask = pygame.mask.from_surface(map)
 
     # Create the player data
-    player = pygame.image.load("alien1.png").convert_alpha()
-    player = pygame.transform.smoothscale(player, (25, 25))
+    player = pygame.image.load("Knight.png").convert_alpha()
+    player = pygame.transform.smoothscale(player, (40, 40))
     player_rect = player.get_rect()
     player_mask = pygame.mask.from_surface(player)
 
@@ -119,10 +120,10 @@ def main():
         if started:
             pygame.mouse.set_visible(False)
             if pixel_collision(player_mask, player_rect, map_mask, map_rect):
-                # print("colliding", frame_count)
+                print("colliding", frame_count)
                 a = True
             screen.fill((0, 0, 0))
-            screen.blit(tutorial, (100, 100))
+            screen.blit(tutorial, (10,10))
             screen.blit(map, map_rect)
             screen.blit(door, door_rect)
             screen.blit(key, key_rect)
