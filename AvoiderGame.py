@@ -20,26 +20,25 @@ def pixel_collision(mask1, rect1, mask2, rect2):
 
 
 def main():
-    # Initialize pygame
     pygame.init()
 
-    pygame.mixer.music.load('MainMenuMusic.wav')
+    # Load Music and other Sounds
+    pygame.mixer.music.load('sounds/MainMenuMusic.wav')
     pygame.mixer.music.play(-1)
 
+    lose_heart = pygame.mixer.Sound('sounds/death.wav')
+    found_item = pygame.mixer.Sound('sounds/round_end.wav')
 
     map = pygame.image.load("Maze_level_1.png")
     map = pygame.transform.smoothscale(map, (1000, 700))
-    # Store window width and height in different forms for easy access
     map_size = map.get_size()
     map_rect = map.get_rect()
 
-    # create the window based on the map size
     screen = pygame.display.set_mode(map_size)
     map.set_colorkey((0, 0, 0))
     map = map.convert_alpha()
     map_mask = pygame.mask.from_surface(map)
 
-    # Create the player data
     player = pygame.image.load("alien1.png").convert_alpha()
     player = pygame.transform.smoothscale(player, (25, 25))
     player_rect = player.get_rect()
@@ -48,12 +47,12 @@ def main():
     big_font = pygame.font.Font('ARCADECLASSIC.ttf', 70)
     medium_font = pygame.font.Font('ARCADECLASSIC.ttf', 40)
 
-    title = big_font.render("Mouse Game", True, (255, 255, 255))
+    title = big_font.render("Knights Escape", True, (255, 255, 255))
 
     start_text = medium_font.render("START", True, (255, 255, 255))
     start_rect = start_text.get_rect()
     start_x, start_y = start_rect[2], start_rect[3]
-    stx, sty = 235, 250
+    stx, sty = 190, 250
 
     tutorial = medium_font.render("Get to the castle!", True, (255, 255, 255))
 
@@ -62,7 +61,7 @@ def main():
     quit_text = medium_font.render("QUIT", True, (255, 255, 255))
     quit_rect = quit_text.get_rect()
     quit_x, quit_y = quit_rect[2], quit_rect[3]
-    qtx, qty = 235, 350
+    qtx, qty = 190, 350
 
     key = pygame.image.load("key.png").convert_alpha()
     key = pygame.transform.smoothscale(key, (25, 25))
@@ -82,6 +81,8 @@ def main():
     door_rect.center = (850, 90)
     door_mask = pygame.mask.from_surface(door)
 
+    heart = pygame.image.load("heart.png").convert_alpha()
+
     frame_count = 0
 
     clock = pygame.time.Clock()
@@ -95,51 +96,55 @@ def main():
     # This state variable shows whether the key is found yet or not
     found_key = False
 
-    # Hide the arrow cursor and replace it with a sprite.
+    hearts = None
+    immune_period = 0
 
-    # This is the main game loop. In it we must:
-    # - check for events
-    # - update the scene
-    # - draw the scene
     while is_alive:
-        # Check events by looping over the list of events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 is_alive = False
 
-        # Position the player to the mouse location
         pos = pygame.mouse.get_pos()
         player_rect.center = pos
-        # See if we touch the maze walls
-        # Don't leave this in the game
 
-        # Check if we contact the key
         if not found_key and pixel_collision(player_mask, player_rect, key_mask, key_rect):
             found_key = True
+
         if started:
             pygame.mouse.set_visible(False)
+
             if pixel_collision(player_mask, player_rect, map_mask, map_rect):
-                # print("colliding", frame_count)
-                a = True
+                if hearts <= 0:
+                    started = False
+                if immune_period < frame_count:
+                    pygame.mixer.Sound.play(lose_heart)
+                    hearts -= 1
+                    immune_period = frame_count + 25
+
             screen.fill((0, 0, 0))
             screen.blit(tutorial, (100, 100))
             screen.blit(map, map_rect)
             screen.blit(door, door_rect)
             screen.blit(key, key_rect)
+
+            for heart_left in range(1, hearts + 1):
+                screen.blit(heart, (35 * heart_left, 25))
+
             screen.blit(player, player_rect)
 
         if not started:
+            pygame.mouse.set_visible(True)
             screen.fill((0, 0, 0))
-            screen.blit(title, (235, 150))
+            screen.blit(title, (190, 150))
             screen.blit(start_text, (stx, sty))
-            screen.blit(credits_text, (235, 300))
+            screen.blit(credits_text, (190, 300))
             screen.blit(quit_text, (qtx, qty))
 
             mouse_down = event.type == pygame.MOUSEBUTTONDOWN
 
             if mouse_down and pos[0] in range(stx, stx + start_x) and pos[1] in range(sty,
                                                                                       sty + start_y):
-                print('start')
+                hearts = 3
                 started = True
             elif mouse_down and pos[0] in range(qtx, qtx + quit_x) and pos[1] in range(qty, qty + quit_y):
                 is_alive = False
