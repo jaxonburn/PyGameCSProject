@@ -102,7 +102,7 @@ def main():
         # if not found_key and pixel_collision(player_mask, player_rect, key_mask, key_rect):
         #     found_key = True
 
-        if started:
+        if not started:
             screen.fill((0, 0, 0))
             screen.blit(title, (235, 150))
             screen.blit(start_text, (stx, sty))
