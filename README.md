@@ -1,3 +1,3 @@
-A fun pygame project for my Intro to Programming Class at the University of Utah
+PyGame Project for CS: 1400
 
 Created by Jake Crane and Jaxon Burningham
