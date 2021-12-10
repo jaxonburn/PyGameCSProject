@@ -30,7 +30,6 @@ def main():
     pygame.mixer.music.load('MainMenuMusic.wav')
     pygame.mixer.music.play(-1)
 
-
     # create the window based on the map size
     screen = pygame.display.set_mode(map_size)
     # map = map.convert_alpha()
@@ -42,6 +41,16 @@ def main():
     player = pygame.transform.smoothscale(player, (25, 25))
     player_rect = player.get_rect()
     player_mask = pygame.mask.from_surface(player)
+
+    big_font = pygame.font.Font('ARCADECLASSIC.ttf', 70)
+    medium_font = pygame.font.Font('ARCADECLASSIC.ttf', 40)
+
+    title = big_font.render("Mouse Game", True, (255, 255, 255))
+
+    start_text = medium_font.render("START", True, (255, 255, 255))
+    stx, sty = 235, 250
+    credits_text = medium_font.render("CREDITS", True, (255, 255, 255))
+    quit_text = medium_font.render("QUIT", True, (255, 255, 255))
 
     # key = pygame.image.load("key.png").convert_alpha()
     # key = pygame.transform.smoothscale(key, (25, 25))
@@ -55,17 +64,10 @@ def main():
     # door_rect.center = (550, 200)
     # door_mask = pygame.mask.from_surface(door)
 
-    # The frame tells which sprite frame to draw
-    frame_count = 0;
+    frame_count = 0
 
-    # The clock helps us manage the frames per second of the animation
     clock = pygame.time.Clock()
 
-    big_font = pygame.font.Font('ARCADECLASSIC.ttf', 70)
-    medium_font = pygame.font.Font('ARCADECLASSIC.ttf', 40)
-
-
-    main_menu = True
 
     # The started variable records if the start color has been clicked and the level started
     started = False
@@ -99,16 +101,17 @@ def main():
         # Check if we contact the key
         # if not found_key and pixel_collision(player_mask, player_rect, key_mask, key_rect):
         #     found_key = True
-        if main_menu:
+
+        if started:
             screen.fill((0, 0, 0))
-            label = big_font.render("Mouse Game", True, (255, 255, 255))
-            screen.blit(label, (235, 150))
-            start_text = medium_font.render("START", True, (255, 255, 255))
-            screen.blit(start_text, (235, 250))
-            credits_text = medium_font.render("CREDITS", True, (255, 255, 255))
+            screen.blit(title, (235, 150))
+            screen.blit(start_text, (stx, sty))
             screen.blit(credits_text, (235, 300))
-            quit_text = medium_font.render("QUIT", True, (255, 255, 255))
             screen.blit(quit_text, (235, 350))
+
+            if event.type == pygame.MOUSEBUTTONDOWN and pos[0] in range(stx, stx + 110) and pos[1] in range(sty,
+                                                                                                            sty + 41):
+                started = True
 
         # screen.blit(map, map_rect)
 
