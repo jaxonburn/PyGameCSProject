@@ -41,6 +41,9 @@ def main():
     map = map.convert_alpha()
     map_mask = pygame.mask.from_surface(map)
 
+    main_menu_knight = pygame.image.load("Knight_with_sword.png").convert_alpha()
+    main_menu_knight = pygame.transform.smoothscale(main_menu_knight, (250, 250))
+
     player = pygame.image.load("Knight.png").convert_alpha()
     player = pygame.transform.smoothscale(player, (30, 30))
     player_rect = player.get_rect()
@@ -48,13 +51,11 @@ def main():
 
     player_with_sword = pygame.image.load("Knight_with_sword.png").convert_alpha()
     player_with_sword = pygame.transform.smoothscale(player_with_sword, (30, 30))
-    player_sword_rect = player_with_sword.get_rect()
-    player_sword_mask = pygame.mask.from_surface(player_with_sword)
 
     big_font = pygame.font.Font('ARCADECLASSIC.ttf', 70)
     medium_font = pygame.font.Font('ARCADECLASSIC.ttf', 40)
 
-    title = big_font.render("Knights Escape", True, (255, 255, 255))
+    title = big_font.render("Knights    Escape", True, (255, 255, 255))
 
     start_text = medium_font.render("START", True, (255, 255, 255))
     start_rect = start_text.get_rect()
@@ -90,6 +91,7 @@ def main():
 
     # The started variable records if the start color has been clicked and the level started
     started = False
+    level = None
 
     # The is_alive variable records if anything bad has happened (off the path, touch guard, etc.)
     is_alive = True
@@ -108,14 +110,9 @@ def main():
         pos = pygame.mouse.get_pos()
         player_rect.center = pos
 
-        if not found_sword and pixel_collision(player_mask, player_rect, sword_mask, sword_rect):
-            pygame.mixer.Sound.play(found_item)
-            found_sword = True
-            player = player_with_sword
 
         if started:
             pygame.mouse.set_visible(False)
-
 
             if pixel_collision(player_mask, player_rect, map_mask, map_rect):
                 if hearts <= 0:
@@ -130,13 +127,19 @@ def main():
                     hearts -= 1
                     immune_period = frame_count + 25
 
+            if level == 1:
+                screen.fill((0, 0, 0))
+                screen.blit(map, map_rect)
+                screen.blit(castle, castle_rect)
+                if not found_sword:
+                    screen.blit(sword, sword_rect)
 
-
-            screen.fill((0, 0, 0))
-            screen.blit(map, map_rect)
-            screen.blit(castle, castle_rect)
-            if not found_sword:
-                screen.blit(sword, sword_rect)
+                if not found_sword and pixel_collision(player_mask, player_rect, sword_mask, sword_rect):
+                    pygame.mixer.Sound.play(found_item)
+                    found_sword = True
+                    player = player_with_sword
+                    player_rect = player.get_rect()
+                    player_mask = pygame.mask.from_surface(player)
 
             for heart_left in range(1, hearts + 1):
                 screen.blit(heart, (35 * heart_left, 25))
@@ -150,6 +153,7 @@ def main():
             screen.blit(start_text, (stx, sty))
             screen.blit(credits_text, (400, 400))
             screen.blit(quit_text, (qtx, qty))
+            screen.blit(main_menu_knight, (50, 400))
 
             mouse_down = event.type == pygame.MOUSEBUTTONDOWN
 
@@ -157,6 +161,7 @@ def main():
                                                                                       sty + start_y):
                 hearts = 3
                 started = True
+                level = 1
             elif mouse_down and pos[0] in range(qtx, qtx + quit_x) and pos[1] in range(qty, qty + quit_y):
                 is_alive = False
 
