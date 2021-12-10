@@ -59,7 +59,7 @@ def main():
     start_text = medium_font.render("START", True, (255, 255, 255))
     start_rect = start_text.get_rect()
     start_x, start_y = start_rect[2], start_rect[3]
-    stx, sty = 190, 250
+    stx, sty = 400, 350
 
     tutorial = medium_font.render("Get to the castle!", True, (255, 255, 255))
 
@@ -68,7 +68,7 @@ def main():
     quit_text = medium_font.render("QUIT", True, (255, 255, 255))
     quit_rect = quit_text.get_rect()
     quit_x, quit_y = quit_rect[2], quit_rect[3]
-    qtx, qty = 190, 350
+    qtx, qty = 400, 450
 
     sword = pygame.image.load("sword.png").convert_alpha()
     sword = pygame.transform.smoothscale(sword, (60, 35))
@@ -119,6 +119,8 @@ def main():
 
             if pixel_collision(player_mask, player_rect, map_mask, map_rect):
                 if hearts <= 0:
+
+                    found_sword = False
                     started = False
                 if immune_period < frame_count:
                     pygame.mixer.Sound.play(lose_heart)
@@ -141,9 +143,9 @@ def main():
         if not started:
             pygame.mouse.set_visible(True)
             screen.fill((0, 0, 0))
-            screen.blit(title, (190, 150))
+            screen.blit(title, (300, 200))
             screen.blit(start_text, (stx, sty))
-            screen.blit(credits_text, (190, 300))
+            screen.blit(credits_text, (400, 400))
             screen.blit(quit_text, (qtx, qty))
 
             mouse_down = event.type == pygame.MOUSEBUTTONDOWN
