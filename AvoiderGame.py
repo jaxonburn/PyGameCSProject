@@ -15,6 +15,7 @@ def pixel_collision(mask1, rect1, mask2, rect2):
     offset_y = rect2[1] - rect1[1]
     # See if the two masks at the offset are overlapping.
     overlap = mask1.overlap(mask2, (offset_x, offset_y))
+    print(overlap)
     return overlap
 
 
@@ -22,21 +23,21 @@ def main():
     # Initialize pygame
     pygame.init()
 
-    map = pygame.image.load("Maze_level_1.png")
-    map = pygame.transform.smoothscale(map, (1000,700))
-    # Store window width and height in different forms for easy access
-    map_size = pygame.display.set_mode((1000,1000))
-    map_rect = map.get_rect()
-
     pygame.mixer.music.load('MainMenuMusic.wav')
     pygame.mixer.music.play(-1)
 
-    # create the window based on the map size
-    screen = pygame.display.set_mode((1000,700))
-    map = map.convert_alpha()
-    map.set_colorkey((255,255,255))
-    map_mask = pygame.mask.from_surface(map)
 
+    map = pygame.image.load("Maze_level_1.png")
+    map = pygame.transform.smoothscale(map, (1000, 700))
+    # Store window width and height in different forms for easy access
+    map_size = map.get_size()
+    map_rect = map.get_rect()
+
+    # create the window based on the map size
+    screen = pygame.display.set_mode(map_size)
+    map.set_colorkey((0, 0, 0))
+    map = map.convert_alpha()
+    map_mask = pygame.mask.from_surface(map)
 
     # Create the player data
     player = pygame.image.load("alien1.png").convert_alpha()
@@ -50,12 +51,26 @@ def main():
     title = big_font.render("Mouse Game", True, (255, 255, 255))
 
     start_text = medium_font.render("START", True, (255, 255, 255))
-    tutorial = medium_font.render("Get to the castle!",True, (255, 255, 255))
+    start_rect = start_text.get_rect()
+    start_x, start_y = start_rect[2], start_rect[3]
     stx, sty = 235, 250
+
+    tutorial = medium_font.render("Get to the castle!", True, (255, 255, 255))
+
     credits_text = medium_font.render("CREDITS", True, (255, 255, 255))
+
     quit_text = medium_font.render("QUIT", True, (255, 255, 255))
+    quit_rect = quit_text.get_rect()
+    quit_x, quit_y = quit_rect[2], quit_rect[3]
+    qtx, qty = 235, 350
 
     key = pygame.image.load("key.png").convert_alpha()
+    key = pygame.transform.smoothscale(key, (25, 25))
+    key_rect = key.get_rect()
+    key_rect.center = (350, 400)
+    key_mask = pygame.mask.from_surface(key)
+
+    key = pygame.image.load("sword.png").convert_alpha()
     key = pygame.transform.smoothscale(key, (60, 35))
     key_rect = key.get_rect()
     key_rect.center = (150, 645)
@@ -70,7 +85,6 @@ def main():
     frame_count = 0
 
     clock = pygame.time.Clock()
-
 
     # The started variable records if the start color has been clicked and the level started
     started = False
@@ -97,7 +111,7 @@ def main():
         pos = pygame.mouse.get_pos()
         player_rect.center = pos
         # See if we touch the maze walls
-          # Don't leave this in the game
+        # Don't leave this in the game
 
         # Check if we contact the key
         if not found_key and pixel_collision(player_mask, player_rect, key_mask, key_rect):
@@ -105,27 +119,30 @@ def main():
         if started:
             pygame.mouse.set_visible(False)
             if pixel_collision(player_mask, player_rect, map_mask, map_rect):
-                print("colliding", frame_count)
+                # print("colliding", frame_count)
+                a = True
             screen.fill((0, 0, 0))
-            screen.blit(tutorial, (100,100))
-            screen.blit(player,player_rect)
+            screen.blit(tutorial, (100, 100))
             screen.blit(map, map_rect)
             screen.blit(door, door_rect)
             screen.blit(key, key_rect)
-
+            screen.blit(player, player_rect)
 
         if not started:
             screen.fill((0, 0, 0))
             screen.blit(title, (235, 150))
             screen.blit(start_text, (stx, sty))
             screen.blit(credits_text, (235, 300))
-            screen.blit(quit_text, (235, 350))
+            screen.blit(quit_text, (qtx, qty))
 
+            mouse_down = event.type == pygame.MOUSEBUTTONDOWN
 
-            if event.type == pygame.MOUSEBUTTONDOWN and pos[0] in range(stx, stx + 110) and pos[1] in range(sty,
-                                                                                                            sty + 41):
+            if mouse_down and pos[0] in range(stx, stx + start_x) and pos[1] in range(sty,
+                                                                                      sty + start_y):
+                print('start')
                 started = True
-
+            elif mouse_down and pos[0] in range(qtx, qtx + quit_x) and pos[1] in range(qty, qty + quit_y):
+                is_alive = False
 
         # screen.blit(map, map_rect)
 
