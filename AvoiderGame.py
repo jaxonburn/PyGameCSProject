@@ -61,7 +61,9 @@ def main():
     # The clock helps us manage the frames per second of the animation
     clock = pygame.time.Clock()
 
-    myfont = pygame.font.Font('ARCADECLASSIC.ttf', 24)
+    big_font = pygame.font.Font('ARCADECLASSIC.ttf', 70)
+    medium_font = pygame.font.Font('ARCADECLASSIC.ttf', 40)
+
 
     main_menu = True
 
@@ -75,7 +77,7 @@ def main():
     # found_key = False
 
     # Hide the arrow cursor and replace it with a sprite.
-    pygame.mouse.set_visible(False)
+    # pygame.mouse.set_visible(False)
 
     # This is the main game loop. In it we must:
     # - check for events
@@ -90,7 +92,6 @@ def main():
         # Position the player to the mouse location
         pos = pygame.mouse.get_pos()
         player_rect.center = pos
-        print(map_rect.center)
         # See if we touch the maze walls
         # if pixel_collision(player_mask, player_rect, map_mask, map_rect):
         #     print("colliding", frame_count)  # Don't leave this in the game
@@ -98,9 +99,17 @@ def main():
         # Check if we contact the key
         # if not found_key and pixel_collision(player_mask, player_rect, key_mask, key_rect):
         #     found_key = True
+        if main_menu:
+            screen.fill((0, 0, 0))
+            label = big_font.render("Mouse Game", True, (255, 255, 255))
+            screen.blit(label, (235, 150))
+            start_text = medium_font.render("START", True, (255, 255, 255))
+            screen.blit(start_text, (235, 250))
+            credits_text = medium_font.render("CREDITS", True, (255, 255, 255))
+            screen.blit(credits_text, (235, 300))
+            quit_text = medium_font.render("QUIT", True, (255, 255, 255))
+            screen.blit(quit_text, (235, 350))
 
-        # Draw the background
-        screen.fill((0, 0, 0))
         # screen.blit(map, map_rect)
 
         # Only draw the key and door if the key is not collected
@@ -111,11 +120,6 @@ def main():
         # Draw the player character
         # screen.blit(player, player_rect)
 
-        # Write some text to the screen. You can do something like this to show some hints or whatever you want.
-        label = myfont.render("Shoota    Escape", True, (255, 255, 255))
-        screen.blit(label, (20, 20))
-
-        # Every time through the loop, increase the frame count.
         frame_count += 1
 
         # Bring drawn changes to the front
