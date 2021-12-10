@@ -22,19 +22,21 @@ def main():
     # Initialize pygame
     pygame.init()
 
-    map = pygame.image.load("map.png")
+    map = pygame.image.load("Maze_level_1.png")
+    map = pygame.transform.smoothscale(map, (1000,700))
     # Store window width and height in different forms for easy access
-    map_size = map.get_size()
+    map_size = pygame.display.set_mode((1000,1000))
     map_rect = map.get_rect()
 
     pygame.mixer.music.load('MainMenuMusic.wav')
     pygame.mixer.music.play(-1)
 
     # create the window based on the map size
-    screen = pygame.display.set_mode(map_size)
-    # map = map.convert_alpha()
-    # map.set_colorkey((255, 255, 255))
-    # map_mask = pygame.mask.from_surface(map)
+    screen = pygame.display.set_mode((1000,700))
+    map = map.convert_alpha()
+    map.set_colorkey((255,255,255))
+    map_mask = pygame.mask.from_surface(map)
+
 
     # Create the player data
     player = pygame.image.load("alien1.png").convert_alpha()
@@ -48,21 +50,22 @@ def main():
     title = big_font.render("Mouse Game", True, (255, 255, 255))
 
     start_text = medium_font.render("START", True, (255, 255, 255))
+    tutorial = medium_font.render("Get to the castle!",True, (255, 255, 255))
     stx, sty = 235, 250
     credits_text = medium_font.render("CREDITS", True, (255, 255, 255))
     quit_text = medium_font.render("QUIT", True, (255, 255, 255))
 
-    # key = pygame.image.load("key.png").convert_alpha()
-    # key = pygame.transform.smoothscale(key, (25, 25))
-    # key_rect = key.get_rect()
-    # key_rect.center = (350, 400)
-    # key_mask = pygame.mask.from_surface(key)
+    key = pygame.image.load("key.png").convert_alpha()
+    key = pygame.transform.smoothscale(key, (60, 35))
+    key_rect = key.get_rect()
+    key_rect.center = (150, 645)
+    key_mask = pygame.mask.from_surface(key)
 
-    # door = pygame.image.load("door.png").convert_alpha()
-    # door = pygame.transform.smoothscale(door, (200, 200))
-    # door_rect = door.get_rect()
-    # door_rect.center = (550, 200)
-    # door_mask = pygame.mask.from_surface(door)
+    door = pygame.image.load("castle.png").convert_alpha()
+    door = pygame.transform.smoothscale(door, (200, 200))
+    door_rect = door.get_rect()
+    door_rect.center = (850, 90)
+    door_mask = pygame.mask.from_surface(door)
 
     frame_count = 0
 
@@ -76,10 +79,9 @@ def main():
     is_alive = True
 
     # This state variable shows whether the key is found yet or not
-    # found_key = False
+    found_key = False
 
     # Hide the arrow cursor and replace it with a sprite.
-    # pygame.mouse.set_visible(False)
 
     # This is the main game loop. In it we must:
     # - check for events
@@ -95,12 +97,22 @@ def main():
         pos = pygame.mouse.get_pos()
         player_rect.center = pos
         # See if we touch the maze walls
-        # if pixel_collision(player_mask, player_rect, map_mask, map_rect):
-        #     print("colliding", frame_count)  # Don't leave this in the game
+          # Don't leave this in the game
 
         # Check if we contact the key
-        # if not found_key and pixel_collision(player_mask, player_rect, key_mask, key_rect):
-        #     found_key = True
+        if not found_key and pixel_collision(player_mask, player_rect, key_mask, key_rect):
+            found_key = True
+        if started:
+            pygame.mouse.set_visible(False)
+            if pixel_collision(player_mask, player_rect, map_mask, map_rect):
+                print("colliding", frame_count)
+            screen.fill((0, 0, 0))
+            screen.blit(tutorial, (100,100))
+            screen.blit(player,player_rect)
+            screen.blit(map, map_rect)
+            screen.blit(door, door_rect)
+            screen.blit(key, key_rect)
+
 
         if not started:
             screen.fill((0, 0, 0))
@@ -109,9 +121,11 @@ def main():
             screen.blit(credits_text, (235, 300))
             screen.blit(quit_text, (235, 350))
 
+
             if event.type == pygame.MOUSEBUTTONDOWN and pos[0] in range(stx, stx + 110) and pos[1] in range(sty,
                                                                                                             sty + 41):
                 started = True
+
 
         # screen.blit(map, map_rect)
 
