@@ -48,10 +48,16 @@ def main():
     title = big_font.render("Mouse Game", True, (255, 255, 255))
 
     start_text = medium_font.render("START", True, (255, 255, 255))
+    start_rect = start_text.get_rect()
+    start_x, start_y = start_rect[2], start_rect[3]
     stx, sty = 235, 250
-    credits_text = medium_font.render("CREDITS", True, (255, 255, 255))
-    quit_text = medium_font.render("QUIT", True, (255, 255, 255))
 
+    credits_text = medium_font.render("CREDITS", True, (255, 255, 255))
+
+    quit_text = medium_font.render("QUIT", True, (255, 255, 255))
+    quit_rect = quit_text.get_rect()
+    quit_x, quit_y = quit_rect[2], quit_rect[3]
+    qtx, qty = 235, 350
     # key = pygame.image.load("key.png").convert_alpha()
     # key = pygame.transform.smoothscale(key, (25, 25))
     # key_rect = key.get_rect()
@@ -67,7 +73,6 @@ def main():
     frame_count = 0
 
     clock = pygame.time.Clock()
-
 
     # The started variable records if the start color has been clicked and the level started
     started = False
@@ -107,11 +112,17 @@ def main():
             screen.blit(title, (235, 150))
             screen.blit(start_text, (stx, sty))
             screen.blit(credits_text, (235, 300))
-            screen.blit(quit_text, (235, 350))
+            screen.blit(quit_text, (qtx, qty))
+            pygame.draw.line(screen, (255, 255, 255), [0, 100], [800, 100], 5)
 
-            if event.type == pygame.MOUSEBUTTONDOWN and pos[0] in range(stx, stx + 110) and pos[1] in range(sty,
-                                                                                                            sty + 41):
+            mouse_down = event.type == pygame.MOUSEBUTTONDOWN
+
+            if mouse_down and pos[0] in range(stx, stx + start_x) and pos[1] in range(sty,
+                                                                                      sty + start_y):
+                print('start')
                 started = True
+            elif mouse_down and pos[0] in range(qtx, qtx + quit_x) and pos[1] in range(qty, qty + quit_y):
+                is_alive = False
 
         # screen.blit(map, map_rect)
 
