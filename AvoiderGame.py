@@ -1,4 +1,6 @@
-import sys, pygame, math
+import sys
+
+import pygame
 
 
 # Starter code for an avoider game. Written by David Johnson for CS 1400 University of Utah.
@@ -39,8 +41,8 @@ def main():
     map = map.convert_alpha()
     map_mask = pygame.mask.from_surface(map)
 
-    player = pygame.image.load("alien1.png").convert_alpha()
-    player = pygame.transform.smoothscale(player, (25, 25))
+    player = pygame.image.load("Knight.png").convert_alpha()
+    player = pygame.transform.smoothscale(player, (40, 40))
     player_rect = player.get_rect()
     player_mask = pygame.mask.from_surface(player)
 
@@ -69,7 +71,7 @@ def main():
     key_rect.center = (350, 400)
     key_mask = pygame.mask.from_surface(key)
 
-    key = pygame.image.load("key.png").convert_alpha()
+    key = pygame.image.load("sword.png").convert_alpha()
     key = pygame.transform.smoothscale(key, (60, 35))
     key_rect = key.get_rect()
     key_rect.center = (150, 645)
@@ -122,7 +124,6 @@ def main():
                     immune_period = frame_count + 25
 
             screen.fill((0, 0, 0))
-            screen.blit(tutorial, (100, 100))
             screen.blit(map, map_rect)
             screen.blit(door, door_rect)
             screen.blit(key, key_rect)
