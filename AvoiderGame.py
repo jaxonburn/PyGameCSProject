@@ -31,7 +31,7 @@ def main():
     lose_heart = pygame.mixer.Sound('sounds/death.wav')
     found_item = pygame.mixer.Sound('sounds/round_end.wav')
 
-    map = pygame.image.load("Maze_level_1.png")
+    map = pygame.image.load("images/Maze_level_1.png")
     map = pygame.transform.smoothscale(map, (1000, 700))
     map_size = map.get_size()
     map_rect = map.get_rect()
@@ -41,19 +41,19 @@ def main():
     map = map.convert_alpha()
     map_mask = pygame.mask.from_surface(map)
 
-    main_menu_knight = pygame.image.load("Knight_with_sword.png").convert_alpha()
+    main_menu_knight = pygame.image.load("images/Knight_with_sword.png").convert_alpha()
     main_menu_knight = pygame.transform.smoothscale(main_menu_knight, (250, 250))
 
-    player = pygame.image.load("Knight.png").convert_alpha()
+    player = pygame.image.load("images/Knight.png").convert_alpha()
     player = pygame.transform.smoothscale(player, (30, 30))
     player_rect = player.get_rect()
     player_mask = pygame.mask.from_surface(player)
 
-    player_with_sword = pygame.image.load("Knight_with_sword.png").convert_alpha()
+    player_with_sword = pygame.image.load("images/Knight_with_sword.png").convert_alpha()
     player_with_sword = pygame.transform.smoothscale(player_with_sword, (30, 30))
 
-    big_font = pygame.font.Font('ARCADECLASSIC.ttf', 70)
-    medium_font = pygame.font.Font('ARCADECLASSIC.ttf', 40)
+    big_font = pygame.font.Font('fonts/ARCADECLASSIC.TTF', 70)
+    medium_font = pygame.font.Font('fonts/ARCADECLASSIC.TTF', 40)
 
     title = big_font.render("Knights    Escape", True, (255, 255, 255))
 
@@ -71,19 +71,19 @@ def main():
     quit_x, quit_y = quit_rect[2], quit_rect[3]
     qtx, qty = 400, 450
 
-    sword = pygame.image.load("sword.png").convert_alpha()
+    sword = pygame.image.load("images/sword.png").convert_alpha()
     sword = pygame.transform.smoothscale(sword, (60, 35))
     sword_rect = sword.get_rect()
     sword_rect.center = (150, 645)
     sword_mask = pygame.mask.from_surface(sword)
 
-    castle = pygame.image.load("castle.png").convert_alpha()
+    castle = pygame.image.load("images/castle.png").convert_alpha()
     castle = pygame.transform.smoothscale(castle, (200, 200))
     castle_rect = castle.get_rect()
     castle_rect.center = (850, 90)
     castle_mask = pygame.mask.from_surface(castle)
 
-    heart = pygame.image.load("heart.png").convert_alpha()
+    heart = pygame.image.load("images/heart.png").convert_alpha()
 
     frame_count = 0
 
@@ -116,7 +116,7 @@ def main():
 
             if pixel_collision(player_mask, player_rect, map_mask, map_rect):
                 if hearts <= 0:
-                    player = pygame.image.load("Knight.png").convert_alpha()
+                    player = pygame.image.load("images/Knight.png").convert_alpha()
                     player = pygame.transform.smoothscale(player, (30, 30))
                     player_rect = player.get_rect()
                     player_mask = pygame.mask.from_surface(player)
@@ -140,6 +140,8 @@ def main():
                     player = player_with_sword
                     player_rect = player.get_rect()
                     player_mask = pygame.mask.from_surface(player)
+
+
 
             for heart_left in range(1, hearts + 1):
                 screen.blit(heart, (35 * heart_left, 25))
