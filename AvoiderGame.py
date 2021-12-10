@@ -21,6 +21,7 @@ def pixel_collision(mask1, rect1, mask2, rect2):
     return overlap
 
 
+
 def main():
     pygame.init()
 
@@ -85,6 +86,14 @@ def main():
 
     heart = pygame.image.load("images/heart.png").convert_alpha()
 
+    monster = pygame.image.load("images/Monster.png").convert_alpha()
+    monster = pygame.transform.smoothscale(monster, (80, 80))
+    monster_rect = monster.get_rect()
+    monster_rect.center = (780, 180)
+    monster_mask = pygame.mask.from_surface(monster)
+
+    monster_dead = False
+
     frame_count = 0
 
     clock = pygame.time.Clock()
@@ -114,23 +123,29 @@ def main():
         if started:
             pygame.mouse.set_visible(False)
 
+
             if pixel_collision(player_mask, player_rect, map_mask, map_rect):
-                if hearts <= 0:
-                    player = pygame.image.load("images/Knight.png").convert_alpha()
-                    player = pygame.transform.smoothscale(player, (30, 30))
-                    player_rect = player.get_rect()
-                    player_mask = pygame.mask.from_surface(player)
-                    found_sword = False
-                    started = False
-                if immune_period < frame_count:
-                    pygame.mixer.Sound.play(lose_heart)
-                    hearts -= 1
-                    immune_period = frame_count + 25
+                if found_sword:
+                    pass
+                else:
+                    if hearts <= 0:
+                        player = pygame.image.load("images/Knight.png").convert_alpha()
+                        player = pygame.transform.smoothscale(player, (30, 30))
+                        player_rect = player.get_rect()
+                        player_mask = pygame.mask.from_surface(player)
+                        found_sword = False
+                        started = False
+                    if immune_period < frame_count:
+                        pygame.mixer.Sound.play(lose_heart)
+                        hearts -= 1
+                        immune_period = frame_count + 25
 
             if level == 1:
+
                 screen.fill((0, 0, 0))
                 screen.blit(map, map_rect)
                 screen.blit(castle, castle_rect)
+
                 if not found_sword:
                     screen.blit(sword, sword_rect)
 
@@ -140,6 +155,35 @@ def main():
                     player = player_with_sword
                     player_rect = player.get_rect()
                     player_mask = pygame.mask.from_surface(player)
+
+                if not monster_dead:
+                    screen.blit(monster, monster_rect)
+
+
+                if pixel_collision(player_mask, player_rect, monster_mask, monster_rect):
+                    if found_sword:
+                        monster_dead = True
+                    else:
+                        if hearts <= 0:
+                            player = pygame.image.load("images/Knight.png").convert_alpha()
+                            player = pygame.transform.smoothscale(player, (30, 30))
+                            player_rect = player.get_rect()
+                            player_mask = pygame.mask.from_surface(player)
+                            found_sword = False
+                            started = False
+                        if immune_period < frame_count:
+                            pygame.mixer.Sound.play(lose_heart)
+                            hearts -= 1
+                            immune_period = frame_count + 25
+
+                if pixel_collision(player_mask, player_rect, castle_mask, castle_rect):
+                    level = 2
+                    hearts = 3
+            if level == 2:
+
+                screen.fill((0,0,0))
+
+
 
 
 
