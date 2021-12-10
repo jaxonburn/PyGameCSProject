@@ -42,12 +42,12 @@ def main():
     map_mask = pygame.mask.from_surface(map)
 
     player = pygame.image.load("Knight.png").convert_alpha()
-    player = pygame.transform.smoothscale(player, (40, 40))
+    player = pygame.transform.smoothscale(player, (30, 30))
     player_rect = player.get_rect()
     player_mask = pygame.mask.from_surface(player)
 
     player_with_sword = pygame.image.load("Knight_with_sword.png").convert_alpha()
-    player_with_sword = pygame.transform.smoothscale(player_with_sword, (40, 40))
+    player_with_sword = pygame.transform.smoothscale(player_with_sword, (30, 30))
     player_sword_rect = player_with_sword.get_rect()
     player_sword_mask = pygame.mask.from_surface(player_with_sword)
 
@@ -119,7 +119,10 @@ def main():
 
             if pixel_collision(player_mask, player_rect, map_mask, map_rect):
                 if hearts <= 0:
-
+                    player = pygame.image.load("Knight.png").convert_alpha()
+                    player = pygame.transform.smoothscale(player, (30, 30))
+                    player_rect = player.get_rect()
+                    player_mask = pygame.mask.from_surface(player)
                     found_sword = False
                     started = False
                 if immune_period < frame_count:
