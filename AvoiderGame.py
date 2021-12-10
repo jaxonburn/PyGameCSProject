@@ -46,6 +46,11 @@ def main():
     player_rect = player.get_rect()
     player_mask = pygame.mask.from_surface(player)
 
+    player_with_sword = pygame.image.load("Knight_with_sword.png").convert_alpha()
+    player_with_sword = pygame.transform.smoothscale(player_with_sword, (40, 40))
+    player_sword_rect = player_with_sword.get_rect()
+    player_sword_mask = pygame.mask.from_surface(player_with_sword)
+
     big_font = pygame.font.Font('ARCADECLASSIC.ttf', 70)
     medium_font = pygame.font.Font('ARCADECLASSIC.ttf', 40)
 
@@ -65,23 +70,17 @@ def main():
     quit_x, quit_y = quit_rect[2], quit_rect[3]
     qtx, qty = 190, 350
 
-    key = pygame.image.load("key.png").convert_alpha()
-    key = pygame.transform.smoothscale(key, (25, 25))
-    key_rect = key.get_rect()
-    key_rect.center = (350, 400)
-    key_mask = pygame.mask.from_surface(key)
+    sword = pygame.image.load("sword.png").convert_alpha()
+    sword = pygame.transform.smoothscale(sword, (60, 35))
+    sword_rect = sword.get_rect()
+    sword_rect.center = (150, 645)
+    sword_mask = pygame.mask.from_surface(sword)
 
-    key = pygame.image.load("sword.png").convert_alpha()
-    key = pygame.transform.smoothscale(key, (60, 35))
-    key_rect = key.get_rect()
-    key_rect.center = (150, 645)
-    key_mask = pygame.mask.from_surface(key)
-
-    door = pygame.image.load("castle.png").convert_alpha()
-    door = pygame.transform.smoothscale(door, (200, 200))
-    door_rect = door.get_rect()
-    door_rect.center = (850, 90)
-    door_mask = pygame.mask.from_surface(door)
+    castle = pygame.image.load("castle.png").convert_alpha()
+    castle = pygame.transform.smoothscale(castle, (200, 200))
+    castle_rect = castle.get_rect()
+    castle_rect.center = (850, 90)
+    castle_mask = pygame.mask.from_surface(castle)
 
     heart = pygame.image.load("heart.png").convert_alpha()
 
@@ -96,7 +95,7 @@ def main():
     is_alive = True
 
     # This state variable shows whether the key is found yet or not
-    found_key = False
+    found_sword = False
 
     hearts = None
     immune_period = 0
@@ -109,11 +108,14 @@ def main():
         pos = pygame.mouse.get_pos()
         player_rect.center = pos
 
-        if not found_key and pixel_collision(player_mask, player_rect, key_mask, key_rect):
-            found_key = True
+        if not found_sword and pixel_collision(player_mask, player_rect, sword_mask, sword_rect):
+            pygame.mixer.Sound.play(found_item)
+            found_sword = True
+            player = player_with_sword
 
         if started:
             pygame.mouse.set_visible(False)
+
 
             if pixel_collision(player_mask, player_rect, map_mask, map_rect):
                 if hearts <= 0:
@@ -123,10 +125,13 @@ def main():
                     hearts -= 1
                     immune_period = frame_count + 25
 
+
+
             screen.fill((0, 0, 0))
             screen.blit(map, map_rect)
-            screen.blit(door, door_rect)
-            screen.blit(key, key_rect)
+            screen.blit(castle, castle_rect)
+            if not found_sword:
+                screen.blit(sword, sword_rect)
 
             for heart_left in range(1, hearts + 1):
                 screen.blit(heart, (35 * heart_left, 25))
