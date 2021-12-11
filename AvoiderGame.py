@@ -7,7 +7,8 @@ import pygame
 
 # Finished game authors:
 #
-# Jaxon Burningham
+# Jaxon Burningham and Jacob Crane
+
 
 def pixel_collision(mask1, rect1, mask2, rect2):
     """
@@ -67,6 +68,9 @@ def main():
     start_x, start_y = start_rect[2], start_rect[3]
     stx, sty = 400, 350
     lvl_two_stx, lvl_two_sty = 380, 330
+
+    failed_text = medium_font.render("YOU HAVE DIED CLICK TO RESTART", True, (255, 255, 255))
+    failed_rect = failed_text.get_rect()
 
     # Credits Text
     created_by_text = medium_font.render("~Created By~", True, (255, 255, 255))
@@ -175,13 +179,17 @@ def main():
         if started:
             # Checking if player has ran out of lives, if so restarts game
             if hearts <= 0:
-                player = pygame.image.load("images/Knight.png").convert_alpha()
-                player = pygame.transform.smoothscale(player, (30, 30))
-                player_rect = player.get_rect()
-                player_mask = pygame.mask.from_surface(player)
-                found_sword = False
-                started = False
                 level = None
+                screen.fill((0, 0, 0))
+                screen.blit(failed_text, failed_rect)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    player = pygame.image.load("images/Knight.png").convert_alpha()
+                    player = pygame.transform.smoothscale(player, (30, 30))
+                    player_rect = player.get_rect()
+                    player_mask = pygame.mask.from_surface(player)
+                    found_sword = False
+                    started = False
+
 
             if level == 1:
 
