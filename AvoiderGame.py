@@ -156,6 +156,7 @@ def main():
         pos = pygame.mouse.get_pos()
         player_rect.center = pos
 
+
         if started:
             # Checking if player has ran out of lives, if so restarts game
             if hearts <= 0:
@@ -177,7 +178,7 @@ def main():
                     if immune_period < frame_count:
                         pygame.mixer.Sound.play(lose_heart)
                         hearts -= 1
-                        immune_period = frame_count + 20
+                        immune_period = frame_count + 13
 
                 if not found_sword:
                     screen.blit(sword, sword_rect)
@@ -199,7 +200,7 @@ def main():
                         if immune_period < frame_count:
                             pygame.mixer.Sound.play(lose_heart)
                             hearts -= 1
-                            immune_period = frame_count + 20
+                            immune_period = frame_count + 13
 
                 if pixel_collision(player_mask, player_rect, castle_mask, castle_rect) and found_sword:
                     level = 2
@@ -246,19 +247,19 @@ def main():
                     if immune_period < frame_count:
                         pygame.mixer.Sound.play(lose_heart)
                         hearts -= 1
-                        immune_period = frame_count + 20
+                        immune_period = frame_count + 13
 
                 if pixel_collision(player_mask, player_rect, fireball_two_mask, fireball_two_rect):
                     if immune_period < frame_count:
                         pygame.mixer.Sound.play(lose_heart)
                         hearts -= 1
-                        immune_period = frame_count + 20
+                        immune_period = frame_count + 13
 
                 if pixel_collision(player_mask, player_rect, map_two_mask, map_two_rect):
                     if immune_period < frame_count:
                         pygame.mixer.Sound.play(lose_heart)
                         hearts -= 1
-                        immune_period = frame_count + 20
+                        immune_period = frame_count + 13
 
             for heart_left in range(1, hearts + 1):
                 screen.blit(heart, (35 * heart_left, 25))
