@@ -1,0 +1,3 @@
+For our theme we decided to go with a medieval 8-bit theme. So for our main character we have a knight that once he gets a sword
+the avatar changes to one with a sword. For obstacles we had an 8-bit monster and fireball as those seemed to match our theme.
+To win the game you must reach level 3 where there is a treasure after getting through some doors by hitting buttons.
