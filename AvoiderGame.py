@@ -194,6 +194,8 @@ def main():
     treasure_rect.center = (750, 550)
     treasure_mask = pygame.mask.from_surface(treasure)
 
+    treasure_won = pygame.transform.smoothscale(treasure, (150, 150))
+
     button_pushed = False
     button_two_pushed = False
 
@@ -472,7 +474,8 @@ def main():
         # Game over Screen if they won
         if game_over:
             screen.fill((0, 0, 0))
-            screen.blit(main_menu_knight, (150, 350))
+            screen.blit(main_menu_knight, (250, 350))
+            screen.blit(treasure_won, (500, 450))
             screen.blit(won_text, (400, 200))
             screen.blit(back_text, (100, 100))
             mouse_down = event.type == pygame.MOUSEBUTTONDOWN
