@@ -70,7 +70,7 @@ def main():
     big_font = pygame.font.Font('fonts/ARCADECLASSIC.TTF', 70)
     medium_font = pygame.font.Font('fonts/ARCADECLASSIC.TTF', 40)
 
-    title = big_font.render("Knights    Escape", True, (255, 255, 255))
+    title = big_font.render("Knights Escape", True, (255, 255, 255))
 
     won_text = big_font.render("You Won!", True, (255, 255, 255))
 
@@ -360,6 +360,8 @@ def main():
                         pygame.mixer.Sound.play(lose_heart)
                         hearts -= 1
                         immune_period = frame_count + 13
+                        # So they can't zoom through the map
+                        pygame.mouse.set_pos(410, 350)
 
             if level == 3:
                 screen.fill((0, 0, 0))
@@ -393,11 +395,17 @@ def main():
                         pygame.mixer.Sound.play(lose_heart)
                         hearts -= 1
                         immune_period = frame_count + 13
+                        # So they can't zoom through the map
+                        pygame.mouse.set_pos(480, 150)
 
                 # Once treasure is touched they win
                 if pixel_collision(player_mask, player_rect, treasure_mask,
                                    treasure_rect) and button_two_pushed and button_pushed:
                     pygame.mouse.set_visible(True)
+                    found_sword = False
+                    monster_dead = False
+                    button_pushed = False
+                    button_two_pushed = False
                     level = None
                     started = False
                     game_over = True
