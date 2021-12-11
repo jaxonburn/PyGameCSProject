@@ -79,8 +79,8 @@ def main():
     lvl_two_stx, lvl_two_sty = 380, 330
     lvl_three_stx, lvl_three_sty = 480, 100
 
-    failed_text = medium_font.render("YOU HAVE DIED CLICK TO RESTART", True, (255, 255, 255))
-    failed_rect = failed_text.get_rect()
+    failed_text = big_font.render("Game      Over", True, (255, 255, 255))
+    continue_text = big_font.render("Click      To      Restart", True, (255, 255, 255))
 
     # Credits Text
     created_by_text = medium_font.render("~Created By~", True, (255, 255, 255))
@@ -226,7 +226,8 @@ def main():
             if hearts <= 0:
                 level = None
                 screen.fill((0, 0, 0))
-                screen.blit(failed_text, failed_rect)
+                screen.blit(failed_text, (350, 250))
+                screen.blit(continue_text, (225, 350))
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     player = pygame.image.load("images/Knight.png").convert_alpha()
                     player = pygame.transform.smoothscale(player, (30, 30))
@@ -350,7 +351,7 @@ def main():
                         immune_period = frame_count + 13
 
 
-                if pixel_collision(player_mask, player_rect, fireball_three_mask, fireball_four_rect):
+                if pixel_collision(player_mask, player_rect, fireball_three_mask, fireball_three_rect):
                     if immune_period < frame_count:
                         pygame.mixer.Sound.play(lose_heart)
                         hearts -= 1
