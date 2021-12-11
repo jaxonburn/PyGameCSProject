@@ -254,6 +254,7 @@ def main():
                     screen.blit(sword, sword_rect)
 
                 if not found_sword and pixel_collision(player_mask, player_rect, sword_mask, sword_rect):
+                    immune_period = frame_count + 35
                     pygame.mixer.Sound.play(found_item)
                     found_sword = True
                     player = player_with_sword
