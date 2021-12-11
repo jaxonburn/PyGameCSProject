@@ -156,6 +156,9 @@ def main():
     monster_rect.center = (780, 180)
     monster_mask = pygame.mask.from_surface(monster)
 
+    monster_end = pygame.image.load("images/Monster.png").convert_alpha()
+    monster_end = pygame.transform.smoothscale(monster, (150, 150))
+
     monster_dead = False
 
     ladder = pygame.image.load("images/ladder.png").convert_alpha()
@@ -230,8 +233,9 @@ def main():
             if hearts <= 0:
                 level = None
                 screen.fill((0, 0, 0))
-                screen.blit(failed_text, (350, 250))
-                screen.blit(continue_text, (225, 350))
+                screen.blit(monster_end, (440, 85))
+                screen.blit(failed_text, (320, 250))
+                screen.blit(continue_text, (205, 350))
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     player = pygame.image.load("images/Knight.png").convert_alpha()
                     player = pygame.transform.smoothscale(player, (30, 30))
