@@ -189,11 +189,11 @@ def main():
                 screen.blit(map, map_rect)
                 screen.blit(castle, castle_rect)
 
-                # if pixel_collision(player_mask, player_rect, map_mask, map_rect):
-                    # if immune_period < frame_count:
-                    #     pygame.mixer.Sound.play(lose_heart)
-                    #     hearts -= 1
-                    #     immune_period = frame_count + 20
+                if pixel_collision(player_mask, player_rect, map_mask, map_rect):
+                    if immune_period < frame_count:
+                        pygame.mixer.Sound.play(lose_heart)
+                        hearts -= 1
+                        immune_period = frame_count + 20
 
                 if not found_sword:
                     screen.blit(sword, sword_rect)
