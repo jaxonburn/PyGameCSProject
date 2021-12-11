@@ -6,8 +6,9 @@ import pygame
 # Starter code for an avoider game. Written by David Johnson for CS 1400 University of Utah.
 
 # Finished game authors:
-# Jake Crane
+# Jacob Crane
 # Jaxon Burningham
+
 
 def pixel_collision(mask1, rect1, mask2, rect2):
     """
@@ -78,6 +79,9 @@ def main():
     lvl_two_stx, lvl_two_sty = 380, 330
     lvl_three_stx, lvl_three_sty = 480, 100
 
+    failed_text = medium_font.render("YOU HAVE DIED CLICK TO RESTART", True, (255, 255, 255))
+    failed_rect = failed_text.get_rect()
+
     # Credits Text
     created_by_text = medium_font.render("~Created By~", True, (255, 255, 255))
     jaxon_text = medium_font.render("Jaxon Burningham", True, (255, 255, 255))
@@ -127,6 +131,22 @@ def main():
     fireball_two_mask = pygame.mask.from_surface(fireball_two)
 
     fireball_two_ascending = True
+
+    fireball_three = pygame.image.load("images/fireball.png").convert_alpha()
+    fireball_three = pygame.transform.smoothscale(fireball_two, (80, 60))
+    fireball_three_rect = fireball_two.get_rect()
+    fireball_three_rect.center = (740, 290)
+    fireball_three_mask = pygame.mask.from_surface(fireball_two)
+
+    fireball_three_ascending = True
+
+    fireball_four = pygame.image.load("images/fireball.png").convert_alpha()
+    fireball_four = pygame.transform.smoothscale(fireball_two, (80, 60))
+    fireball_four_rect = fireball_two.get_rect()
+    fireball_four_rect.center = (740, 460)
+    fireball_four_mask = pygame.mask.from_surface(fireball_two)
+
+    fireball_four_ascending = True
 
     monster = pygame.image.load("images/Monster.png").convert_alpha()
     monster = pygame.transform.smoothscale(monster, (80, 80))
@@ -204,16 +224,21 @@ def main():
         if started:
             # Checking if player has ran out of lives, if so restarts game
             if hearts <= 0:
-                player = pygame.image.load("images/Knight.png").convert_alpha()
-                player = pygame.transform.smoothscale(player, (30, 30))
-                player_rect = player.get_rect()
-                player_mask = pygame.mask.from_surface(player)
-                found_sword = False
-                monster_dead = False
-                button_pushed = False
-                button_two_pushed = False
-                started = False
                 level = None
+                screen.fill((0, 0, 0))
+                screen.blit(failed_text, failed_rect)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    player = pygame.image.load("images/Knight.png").convert_alpha()
+                    player = pygame.transform.smoothscale(player, (30, 30))
+                    player_rect = player.get_rect()
+                    player_mask = pygame.mask.from_surface(player)
+                    found_sword = False
+                    monster_dead = False
+                    button_pushed = False
+                    button_two_pushed = False
+                    started = False
+                    level = None
+
 
             if level == 1:
 
@@ -263,6 +288,8 @@ def main():
                 screen.blit(fireball, fireball_rect)
                 screen.blit(ladder, ladder_rect)
                 screen.blit(fireball_two, fireball_two_rect)
+                screen.blit(fireball_three, fireball_three_rect)
+                screen.blit(fireball_four, fireball_four_rect)
 
                 if fire_ball_ascending:
                     fireball_rect[1] += 6
@@ -275,14 +302,34 @@ def main():
                     fire_ball_ascending = True
 
                 if fireball_two_ascending:
-                    fireball_two_rect[0] += 9
+                    fireball_two_rect[0] += 13
                 else:
-                    fireball_two_rect[0] -= 9
+                    fireball_two_rect[0] -= 13
 
                 if fireball_two_rect[0] > 900:
                     fireball_two_ascending = False
                 elif fireball_two_rect[0] < 700:
                     fireball_two_ascending = True
+
+                if fireball_three_ascending:
+                    fireball_three_rect[0] += 9
+                else:
+                    fireball_three_rect[0] -= 9
+
+                if fireball_three_rect[0] > 900:
+                    fireball_three_ascending = False
+                elif fireball_three_rect[0] < 700:
+                    fireball_three_ascending = True
+
+                if fireball_four_ascending:
+                    fireball_four_rect[0] += 5
+                else:
+                    fireball_four_rect[0] -= 5
+
+                if fireball_four_rect[0] > 900:
+                    fireball_four_ascending = False
+                elif fireball_four_rect[0] < 700:
+                    fireball_four_ascending = True
 
                 if pixel_collision(player_mask, player_rect, ladder_mask, ladder_rect):
                     level = 3
@@ -297,6 +344,19 @@ def main():
                         immune_period = frame_count + 13
 
                 if pixel_collision(player_mask, player_rect, fireball_two_mask, fireball_two_rect):
+                    if immune_period < frame_count:
+                        pygame.mixer.Sound.play(lose_heart)
+                        hearts -= 1
+                        immune_period = frame_count + 13
+
+
+                if pixel_collision(player_mask, player_rect, fireball_three_mask, fireball_four_rect):
+                    if immune_period < frame_count:
+                        pygame.mixer.Sound.play(lose_heart)
+                        hearts -= 1
+                        immune_period = frame_count + 13
+
+                if pixel_collision(player_mask, player_rect, fireball_four_mask, fireball_four_rect):
                     if immune_period < frame_count:
                         pygame.mixer.Sound.play(lose_heart)
                         hearts -= 1
