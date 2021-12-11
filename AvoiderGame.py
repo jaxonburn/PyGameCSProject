@@ -118,6 +118,22 @@ def main():
 
     fireball_two_ascending = True
 
+    fireball_three = pygame.image.load("images/fireball.png").convert_alpha()
+    fireball_three = pygame.transform.smoothscale(fireball_two, (80, 60))
+    fireball_three_rect = fireball_two.get_rect()
+    fireball_three_rect.center = (740, 290)
+    fireball_three_mask = pygame.mask.from_surface(fireball_two)
+
+    fireball_three_ascending = True
+
+    fireball_four = pygame.image.load("images/fireball.png").convert_alpha()
+    fireball_four = pygame.transform.smoothscale(fireball_two, (80, 60))
+    fireball_four_rect = fireball_two.get_rect()
+    fireball_four_rect.center = (740, 460)
+    fireball_four_mask = pygame.mask.from_surface(fireball_two)
+
+    fireball_four_ascending = True
+
     monster = pygame.image.load("images/Monster.png").convert_alpha()
     monster = pygame.transform.smoothscale(monster, (80, 80))
     monster_rect = monster.get_rect()
@@ -173,11 +189,11 @@ def main():
                 screen.blit(map, map_rect)
                 screen.blit(castle, castle_rect)
 
-                if pixel_collision(player_mask, player_rect, map_mask, map_rect):
-                    if immune_period < frame_count:
-                        pygame.mixer.Sound.play(lose_heart)
-                        hearts -= 1
-                        immune_period = frame_count + 20
+                # if pixel_collision(player_mask, player_rect, map_mask, map_rect):
+                    # if immune_period < frame_count:
+                    #     pygame.mixer.Sound.play(lose_heart)
+                    #     hearts -= 1
+                    #     immune_period = frame_count + 20
 
                 if not found_sword:
                     screen.blit(sword, sword_rect)
@@ -215,6 +231,8 @@ def main():
                 screen.blit(fireball, fireball_rect)
                 screen.blit(ladder, ladder_rect)
                 screen.blit(fireball_two, fireball_two_rect)
+                screen.blit(fireball_three, fireball_three_rect)
+                screen.blit(fireball_four, fireball_four_rect)
 
                 if fire_ball_ascending:
                     fireball_rect[1] += 6
@@ -227,14 +245,34 @@ def main():
                     fire_ball_ascending = True
 
                 if fireball_two_ascending:
-                    fireball_two_rect[0] += 9
+                    fireball_two_rect[0] += 13
                 else:
-                    fireball_two_rect[0] -= 9
+                    fireball_two_rect[0] -= 13
 
                 if fireball_two_rect[0] > 900:
                     fireball_two_ascending = False
                 elif fireball_two_rect[0] < 700:
                     fireball_two_ascending = True
+
+                if fireball_three_ascending:
+                    fireball_three_rect[0] += 9
+                else:
+                    fireball_three_rect[0] -= 9
+
+                if fireball_three_rect[0] > 900:
+                    fireball_three_ascending = False
+                elif fireball_three_rect[0] < 700:
+                    fireball_three_ascending = True
+
+                if fireball_four_ascending:
+                    fireball_four_rect[0] += 5
+                else:
+                    fireball_four_rect[0] -= 5
+
+                if fireball_four_rect[0] > 900:
+                    fireball_four_ascending = False
+                elif fireball_four_rect[0] < 700:
+                    fireball_four_ascending = True
 
                 if pixel_collision(player_mask, player_rect, ladder_mask, ladder_rect):
                     level = 3
@@ -249,6 +287,18 @@ def main():
                         immune_period = frame_count + 20
 
                 if pixel_collision(player_mask, player_rect, fireball_two_mask, fireball_two_rect):
+                    if immune_period < frame_count:
+                        pygame.mixer.Sound.play(lose_heart)
+                        hearts -= 1
+                        immune_period = frame_count + 20
+
+                if pixel_collision(player_mask, player_rect, fireball_three_mask, fireball_four_rect):
+                    if immune_period < frame_count:
+                        pygame.mixer.Sound.play(lose_heart)
+                        hearts -= 1
+                        immune_period = frame_count + 20
+
+                if pixel_collision(player_mask, player_rect, fireball_four_mask, fireball_four_rect):
                     if immune_period < frame_count:
                         pygame.mixer.Sound.play(lose_heart)
                         hearts -= 1
