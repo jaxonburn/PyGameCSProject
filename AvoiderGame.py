@@ -6,7 +6,7 @@ import pygame
 # Starter code for an avoider game. Written by David Johnson for CS 1400 University of Utah.
 
 # Finished game authors:
-#
+# Jake Crane
 # Jaxon Burningham
 
 def pixel_collision(mask1, rect1, mask2, rect2):
@@ -46,6 +46,13 @@ def main():
     map_two_rect = map_two.get_rect()
     map_two_mask = pygame.mask.from_surface(map_two)
 
+    map_three = pygame.image.load("images/Maze_level_3.png")
+    map_three = pygame.transform.smoothscale(map_three, (1000, 700))
+    map_three.set_colorkey((0, 0, 0))
+    map_three = map_three.convert_alpha()
+    map_three_rect = map_three.get_rect()
+    map_three_mask = pygame.mask.from_surface(map_three)
+
     main_menu_knight = pygame.image.load("images/Knight_with_sword.png").convert_alpha()
     main_menu_knight = pygame.transform.smoothscale(main_menu_knight, (250, 250))
 
@@ -62,11 +69,14 @@ def main():
 
     title = big_font.render("Knights    Escape", True, (255, 255, 255))
 
+    won_text = big_font.render("You Won!", True, (255, 255, 255))
+
     start_text = medium_font.render("START", True, (255, 255, 255))
     start_rect = start_text.get_rect()
     start_x, start_y = start_rect[2], start_rect[3]
     stx, sty = 400, 350
     lvl_two_stx, lvl_two_sty = 380, 330
+    lvl_three_stx, lvl_three_sty = 480, 100
 
     # Credits Text
     created_by_text = medium_font.render("~Created By~", True, (255, 255, 255))
@@ -132,6 +142,39 @@ def main():
     ladder_rect.center = (570, 650)
     ladder_mask = pygame.mask.from_surface(ladder)
 
+    button = pygame.image.load("images/button.png").convert_alpha()
+    button = pygame.transform.smoothscale(button, (50, 50))
+    button_rect = button.get_rect()
+    button_rect.center = (870, 310)
+    button_mask = pygame.mask.from_surface(button)
+
+    button_two = pygame.image.load("images/button.png").convert_alpha()
+    button_two = pygame.transform.smoothscale(button_two, (50, 50))
+    button_two_rect = button_two.get_rect()
+    button_two_rect.center = (720, 430)
+    button_two_mask = pygame.mask.from_surface(button_two)
+
+    door = pygame.image.load("images/door.png").convert_alpha()
+    door = pygame.transform.smoothscale(door, (80, 80))
+    door_rect = door.get_rect()
+    door_rect.center = (390, 110)
+    door_mask = pygame.mask.from_surface(door)
+
+    door_two = pygame.image.load("images/door.png").convert_alpha()
+    door_two = pygame.transform.smoothscale(door_two, (90, 90))
+    door_two_rect = door_two.get_rect()
+    door_two_rect.center = (480, 400)
+    door_two_mask = pygame.mask.from_surface(door_two)
+
+    treasure = pygame.image.load("images/treasure.png").convert_alpha()
+    treasure = pygame.transform.smoothscale(treasure, (80, 80))
+    treasure_rect = treasure.get_rect()
+    treasure_rect.center = (750, 550)
+    treasure_mask = pygame.mask.from_surface(treasure)
+
+    button_pushed = False
+    button_two_pushed = False
+
     frame_count = 0
 
     clock = pygame.time.Clock()
@@ -140,6 +183,8 @@ def main():
     level = None
 
     show_credits = False
+
+    game_over = False
 
     is_alive = True
 
@@ -156,7 +201,6 @@ def main():
         pos = pygame.mouse.get_pos()
         player_rect.center = pos
 
-
         if started:
             # Checking if player has ran out of lives, if so restarts game
             if hearts <= 0:
@@ -165,6 +209,9 @@ def main():
                 player_rect = player.get_rect()
                 player_mask = pygame.mask.from_surface(player)
                 found_sword = False
+                monster_dead = False
+                button_pushed = False
+                button_two_pushed = False
                 started = False
                 level = None
 
@@ -261,11 +308,61 @@ def main():
                         hearts -= 1
                         immune_period = frame_count + 13
 
+            if level == 3:
+                screen.fill((0, 0, 0))
+                screen.blit(map_three, map_three_rect)
+                screen.blit(player, player_rect)
+                screen.blit(treasure, treasure_rect)
+
+                if not button_pushed:
+                    screen.blit(button, button_rect)
+                    screen.blit(door, door_rect)
+
+                if not button_two_pushed:
+                    screen.blit(door_two, door_two_rect)
+                    screen.blit(button_two, button_two_rect)
+
+                if pixel_collision(player_mask, player_rect, button_mask, button_rect):
+                    button_pushed = True
+
+                if pixel_collision(player_mask, player_rect, button_two_mask, button_two_rect):
+                    button_two_pushed = True
+
+                if pixel_collision(player_mask, player_rect, door_mask, door_rect) and not button_pushed:
+                    pygame.mouse.set_pos((450, 110))
+
+                if pixel_collision(player_mask, player_rect, door_two_mask, door_two_rect) and not button_two_pushed:
+                    pygame.mouse.set_pos((480, 350))
+
+                if pixel_collision(player_mask, player_rect, map_three_mask, map_three_rect):
+                    if immune_period < frame_count:
+                        pygame.mixer.Sound.play(lose_heart)
+                        hearts -= 1
+                        immune_period = frame_count + 13
+
+                if pixel_collision(player_mask, player_rect, treasure_mask, treasure_rect) and button_two_pushed and button_pushed:
+                    pygame.mouse.set_visible(True)
+                    level = None
+                    started = False
+                    game_over = True
+                    pygame.mixer.music.stop()
+                    pygame.mixer.music.unload()
+                    pygame.mixer.music.load('sounds/victory.mp3')
+                    pygame.mixer.music.play(-1)
+
             for heart_left in range(1, hearts + 1):
                 screen.blit(heart, (35 * heart_left, 25))
 
         if level == 3 and not started:
             screen.fill((0, 0, 0))
+            screen.blit(map_three, map_three_rect)
+            screen.blit(start_text, (lvl_three_stx, lvl_three_sty))
+            mouse_down = event.type == pygame.MOUSEBUTTONDOWN
+            if mouse_down and pos[0] in range(lvl_three_stx, lvl_three_stx + start_x) and pos[1] in range(lvl_three_sty,
+                                                                                                          lvl_three_sty + start_y):
+                hearts = 3
+                pygame.mouse.set_visible(False)
+                started = True
 
         if level == 2 and not started:
             screen.fill((0, 0, 0))
@@ -278,7 +375,7 @@ def main():
                 pygame.mouse.set_visible(False)
                 started = True
 
-        if not started and not level and not show_credits:
+        if not started and not level and not show_credits and not game_over:
             pygame.mouse.set_visible(True)
             screen.fill((0, 0, 0))
             screen.blit(title, (300, 200))
@@ -297,8 +394,24 @@ def main():
                 level = 1
             elif mouse_down and pos[0] in range(qtx, qtx + quit_x) and pos[1] in range(qty, qty + quit_y):
                 is_alive = False
-            elif mouse_down and pos[0] in range(credits_x, credits_x + cred_x_rect) and pos[1] in range(credits_y, credits_y + cred_y_rect):
+            elif mouse_down and pos[0] in range(credits_x, credits_x + cred_x_rect) and pos[1] in range(credits_y,
+                                                                                                        credits_y + cred_y_rect):
                 show_credits = True
+
+        if game_over:
+            screen.fill((0, 0, 0))
+            screen.blit(main_menu_knight, (150, 350))
+            screen.blit(won_text, (400, 200))
+            screen.blit(back_text, (100, 100))
+            mouse_down = event.type == pygame.MOUSEBUTTONDOWN
+
+            if mouse_down and pos[0] in range(back_x, back_x + back_x_rect) and pos[1] in range(back_y,
+                                                                                                back_y + back_y_rect):
+                pygame.mixer.music.stop()
+                pygame.mixer.music.unload()
+                pygame.mixer.music.load('sounds/MainMenuMusic.wav')
+                pygame.mixer.music.play(-1)
+                game_over = False
 
         if show_credits:
             screen.fill((0, 0, 0))
@@ -311,7 +424,7 @@ def main():
             mouse_down = event.type == pygame.MOUSEBUTTONDOWN
 
             if mouse_down and pos[0] in range(back_x, back_x + back_x_rect) and pos[1] in range(back_y,
-                                                                                      back_y + back_y_rect):
+                                                                                                back_y + back_y_rect):
                 show_credits = False
 
         frame_count += 1
